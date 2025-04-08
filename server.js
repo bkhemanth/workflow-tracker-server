@@ -19,6 +19,11 @@ mongoose.connect(MONGO_URI)
 app.use(cors());
 app.use(express.json());
 
+app.get('/', (req, res) => {
+  res.send("✅ Backend is running");
+});
+
+
 // ✅ Register user
 app.post('/register', async (req, res) => {
   const { name, email, password } = req.body;
@@ -102,6 +107,7 @@ app.get('/get-workflows', async (req, res) => {
 });
 
 // ✅ Start the server
-app.listen(PORT, () => {
-  console.log(`🚀 Server running at http://localhost:${PORT}`);
+app.listen(process.env.PORT || 3001, () => {
+  console.log(`🚀 Server running at http://localhost:${process.env.PORT || 3001}`);
 });
+
