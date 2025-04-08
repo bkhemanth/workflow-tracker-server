@@ -5,24 +5,15 @@ const User = require('./models/User');
 const Workflow = require('./models/Workflow');
 
 const app = express();
-const PORT = 3001;
-
-// ✅ Replace this with your actual cluster name and password
-const MONGO_URI = 'mongodb+srv://workflowuser:MyApp1234@cluster0.3roeg1u.mongodb.net/workflowDB?retryWrites=true&w=majority';
-
-// ✅ Connect to MongoDB
-mongoose.connect(MONGO_URI)
-  .then(() => console.log('✅ Connected to MongoDB Atlas'))
-  .catch(err => console.error('❌ MongoDB connection error:', err));
 
 // ✅ Middleware
 app.use(cors());
 app.use(express.json());
 
+// ✅ Root route (useful to check Render is working)
 app.get('/', (req, res) => {
-  res.send("✅ Backend is running");
+  res.send('🎉 Workflow Tracker API is live and running!');
 });
-
 
 // ✅ Register user
 app.post('/register', async (req, res) => {
@@ -87,7 +78,7 @@ app.post('/submit-workflow', async (req, res) => {
   }
 });
 
-// ✅ Get user workflows
+// ✅ Get all workflows for a user
 app.get('/get-workflows', async (req, res) => {
   const { email } = req.query;
 
@@ -106,8 +97,15 @@ app.get('/get-workflows', async (req, res) => {
   }
 });
 
-// ✅ Start the server
-app.listen(process.env.PORT || 3001, () => {
-  console.log(`🚀 Server running at http://localhost:${process.env.PORT || 3001}`);
-});
+// ✅ Connect to MongoDB using env variable
+const MONGO_URI = process.env.MONGO_URI;
 
+mongoose.connect(MONGO_URI)
+  .then(() => console.log('✅ Connected to MongoDB Atlas'))
+  .catch(err => console.error('❌ MongoDB connection error:', err));
+
+// ✅ Listen on dynamic port (important for Render!)
+const PORT = process.env.PORT || 3001;
+app.listen(PORT, () => {
+  console.log(`🚀 Server running at http://localhost:${PORT}`);
+});
